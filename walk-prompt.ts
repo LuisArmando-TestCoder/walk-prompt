@@ -2,6 +2,14 @@
 
 import { walk } from "https://deno.land/std@0.203.0/fs/walk.ts";
 
+const extraInstructions = `
+  Appart from the file changes, do not include any additional commentary or markdown formatting.
+
+  Generate only the raw code or content without any explanations, annotations, or formatting. 
+  Do not include triple backticks (\` \`\`\` \`), language labels, or any surrounding text. 
+  Just return the code or content itself, nothing else.
+`;
+
 /**
  * Calls the ChatGPT API (model "gpt-4o") with the provided prompt.
  * Returns the text content from the API response.
@@ -39,12 +47,8 @@ async function callChatGPT(
 async function main() {
   // 1. Ask for an absolute (or relative) directory path.
   const inputPath = prompt(
-    "Enter the absolute (or relative) path of the directory:"
-  )?.trim();
-  if (!inputPath) {
-    console.error("No directory provided.");
-    Deno.exit(1);
-  }
+    "Enter the absolute (or relative) path of the directory (Press Enter for current folder):"
+  )?.trim() || "./";
   // Resolve to an absolute path if necessary.
   let directory = inputPath;
   if (!inputPath.startsWith("/")) {
@@ -128,10 +132,10 @@ async function main() {
 
     // Prepare the final prompt.
     let finalPrompt: string;
-    if (userPrompt.includes("{file_content}")) {
-      finalPrompt = userPrompt.replace("{file_content}", fileContent);
+    if (userPrompt?.includes("{file_content}")) {
+      finalPrompt = userPrompt?.replace("{file_content}", fileContent) + extraInstructions;
     } else {
-      finalPrompt = `${userPrompt}\n\nFile content:\n${fileContent}`;
+      finalPrompt = `${userPrompt}\n\nFile content:\n${fileContent}\n${extraInstructions}`;
     }
 
     // Call the ChatGPT API to get the updated content.
