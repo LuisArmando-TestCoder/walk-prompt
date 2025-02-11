@@ -3,11 +3,14 @@
 import { walk } from "https://deno.land/std@0.203.0/fs/walk.ts";
 
 const extraInstructions = `
-  Appart from the file changes, do not include any additional commentary or markdown formatting.
+  Generate only the raw code or content of the whole file at once, without any explanations, 
+  annotations, or formatting. 
 
-  Generate only the raw code or content without any explanations, annotations, or formatting. 
   Do not include triple backticks (\` \`\`\` \`), language labels, or any surrounding text. 
-  Just return the code or content itself, nothing else.
+  Just return the changed code or changed content itself, nothing else.
+
+  If you are still gonna comment something, leave those comments in the shape of code comments...
+  inside the code.
 `;
 
 /**
