@@ -141,9 +141,11 @@ async function main() {
     let finalPrompt: string;
     if (userPrompt?.includes("{file_content}")) {
       finalPrompt =
-        userPrompt?.replace("{file_content}", fileContent) + extraInstructions;
+        `You are now at ${filePath}` +
+        userPrompt?.replace("{file_content}", fileContent) +
+        extraInstructions;
     } else {
-      finalPrompt = `${userPrompt}\n\nFile content:\n${fileContent}\n${extraInstructions}`;
+      finalPrompt = `${userPrompt}\n\nYou are now at ${filePath} \n\nFile content:\n${fileContent}\n${extraInstructions}`;
     }
 
     // Call the ChatGPT API to get the updated content.
