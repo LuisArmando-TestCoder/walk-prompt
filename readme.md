@@ -22,7 +22,7 @@ This Deno script scans a specified directory for files that match a user-defined
 To install this script globally so it can be accessed from anywhere, run:
 
 ```sh
-deno install --global --allow-read --allow-write --allow-net --allow-env --name wp ./walk-prompt.ts
+deno install --global --allow-read --allow-write --allow-net --allow-env -f --name wp ./walk-prompt.ts
 ```
 
 Now you can run `wp` from any terminal window.

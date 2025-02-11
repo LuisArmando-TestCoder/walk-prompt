@@ -44,11 +44,18 @@ async function callChatGPT(
   return data.choices[0].message.content;
 }
 
+function getBacktipsContent(content: string) {
+  const backtipsContentRegex = /```.*?$([\s\S]*?)^```/gm;
+
+  return backtipsContentRegex.exec(content)?.[1] || content;
+}
+
 async function main() {
   // 1. Ask for an absolute (or relative) directory path.
-  const inputPath = prompt(
-    "Enter the absolute (or relative) path of the directory (Press Enter for current folder):"
-  )?.trim() || "./";
+  const inputPath =
+    prompt(
+      "Enter the absolute (or relative) path of the directory (Press Enter for current folder):"
+    )?.trim() || "./";
   // Resolve to an absolute path if necessary.
   let directory = inputPath;
   if (!inputPath.startsWith("/")) {
@@ -133,7 +140,8 @@ async function main() {
     // Prepare the final prompt.
     let finalPrompt: string;
     if (userPrompt?.includes("{file_content}")) {
-      finalPrompt = userPrompt?.replace("{file_content}", fileContent) + extraInstructions;
+      finalPrompt =
+        userPrompt?.replace("{file_content}", fileContent) + extraInstructions;
     } else {
       finalPrompt = `${userPrompt}\n\nFile content:\n${fileContent}\n${extraInstructions}`;
     }
@@ -142,6 +150,7 @@ async function main() {
     let newContent: string;
     try {
       newContent = await callChatGPT(finalPrompt, apiKey);
+      newContent = getBacktipsContent(newContent);
     } catch (error) {
       console.error(`API call failed for file ${filePath}:`, error);
       continue;
